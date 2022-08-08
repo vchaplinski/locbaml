@@ -34,8 +34,8 @@ namespace BamlLocalization
         [System.STAThread()]
         public static int Main(string[] args)
         {
-			//Debugger.Break();
-        	
+            //Debugger.Break();
+
             LocBamlOptions options;
             string errorMessage;
             GetCommandLineOptions(args, out options, out errorMessage);
@@ -84,9 +84,9 @@ namespace BamlLocalization
 
             return SuccessCode;
         
-        }        
+        }
 
-         #region Private static methods
+        #region Private static methods
         //---------------------------------------------
         // Private static methods
         //---------------------------------------------
@@ -111,7 +111,7 @@ namespace BamlLocalization
                 ResourceGenerator.Generate(options, dictionaries);
             }         
         }
-            
+
         /// <summary>
         /// get CommandLineOptions, return error message
         /// </summary>
@@ -124,6 +124,7 @@ namespace BamlLocalization
                                     new string[]{
                                             "parse",        // /parse for update
                                             "generate",     // /generate     for generate
+                                            "update",       // /update       for update
                                             "*out",         // /out          for output .csv|.txt when parsing, for output directory when generating
                                             "*culture",     // /culture      for culture name
                                             "*translation", // /translation  for translation file, .csv|.txt
@@ -165,6 +166,10 @@ namespace BamlLocalization
                 else if (commandLineOption.Name == "generate")
                 {
                     options.ToGenerate = true;
+                }
+                else if (commandLineOption.Name == "update")
+                {
+                    options.Update = true;
                 }
                 else if (commandLineOption.Name == "nologo")
                 {
@@ -261,6 +266,7 @@ namespace BamlLocalization
         internal string         Translations;        
         internal bool           ToParse;
         internal bool           ToGenerate;
+        internal bool           Update;
         internal bool           HasNoLogo;
         internal bool           IsVerbose;
         internal FileType       TranslationFileType;
@@ -358,7 +364,7 @@ namespace BamlLocalization
                 }
             }
 
-            
+
 
             // Rule #5: If the output file name is empty, we act accordingly
             if (string.IsNullOrEmpty(Output))
@@ -370,14 +376,14 @@ namespace BamlLocalization
                     Output = fileName + "." + FileType.CSV.ToString();
                     TranslationFileType = FileType.CSV;
                 }
-                else  
+                else
                 {
                     // Rule #5.2: If it is generating, and the output can't be empty
                     return StringLoader.Get("OutputDirectoryNeeded");
                 }
                 
             }else
-            {                
+            {
                 // output isn't null, we will determind the Output file type                
                 // Rule #6: if it is parsing. It will be .csv or .txt.
                 if (ToParse)
