@@ -1,4 +1,4 @@
-Msg_Usage=Syntax: LocBaml [Input] [Options]\r\nInput: .Baml .resource .exe or .dll\r\nOptions:\r\n    <Parsing>\r\n    /parse           parse input file to get localizable resources\r\n    /update          updates output instead of rewriting\r\n    /out[:fileName]  output file name that contains the list of localizable resources\r\n                     It can be .csv file or .txt. Default to .csv file if output file name is not given\r\n    /asmpath[:name]  assembly references where localizability attributes are defined\r\n    Example:         LocBaml.exe /parse /upadte Abc.baml /out:c:\\ABC.csv\r\n\r\n    <Generating>\r\n    /generate        generate localized binary\r\n    /tran[:filename] the .csv or .txt that contains list of translations\r\n    /cul[:culture]   culture name\r\n    /out[:dir]       output directory for the localized binaries\r\n    Example:         LocBaml.exe /generate ABC.resources /trans:abc.resources.csv /out:c:\\ /cul:en-US
+Msg_Usage=Syntax: LocBaml [Input] [Options]\r\nInput: .Baml .resource .exe or .dll\r\nOptions:\r\n    <Parsing>\r\n    /parse           parse input file to get localizable resources\r\n    /update          updates output instead of rewriting\r\n    /check           checks the translated file without output\r\n    /out[:fileName]  output file name that contains the list of localizable resources\r\n                     It can be .csv file or .txt. Default to .csv file if output file name is not given\r\n    /asmpath[:name]  assembly references where localizability attributes are defined\r\n    Examples:        LocBaml.exe /parse /update Abc.baml /out:c:\\ABC.csv\r\n                     LocBaml.exe /parse /check Abc.baml /out:c:\\ABC.csv\r\n\r\n    <Generating>\r\n    /generate        generate localized binary\r\n    /tran[:filename] the .csv or .txt that contains list of translations\r\n    /cul[:culture]   culture name\r\n    /out[:dir]       output directory for the localized binaries\r\n    Example:         LocBaml.exe /generate ABC.resources /trans:abc.resources.csv /out:c:\\ /cul:en-US
 Msg_Copyright=Microsoft (R) Baml Localization Utility {0}\r\nCopyright (C) Microsoft Corporation 2005. All rights reserved.\r\n
 ; Command line parsing error strings.
 Err_AmbigousOption=Ambiguous option: /{0}
@@ -37,3 +37,8 @@ Done=Done
 DoneGeneratingResource=Done generating resource stream '{0}'
 DoneGeneratingAssembly=Done generating Assembly
 
+; Check mode output
+OutOfSync=Translated file is outdated. Run 'locbaml /parse /update Abc.baml /out:Abc.csv' to update it.
+ResourceTagged=Resource {1}:{2} is tagged as '{0}'. Translate the resource and clear the tag.
+CheckFailed="Checking of translated file failed. {0} error(s) encountered."
+CheckSuccess="Checking completed. Translated file is OK."

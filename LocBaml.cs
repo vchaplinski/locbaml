@@ -34,7 +34,7 @@ namespace BamlLocalization
         [System.STAThread()]
         public static int Main(string[] args)
         {
-            //Debugger.Break();
+            //Debugger.Launch();
 
             LocBamlOptions options;
             string errorMessage;
@@ -65,7 +65,10 @@ namespace BamlLocalization
                 // it is to parse
                 if (options.ToParse)
                 {
-                    ParseBamlResources(options);
+                    if (!ParseBamlResources(options))
+                    {
+                        return ErrorCode;
+                    }
                 }
                 else
                 {
@@ -94,9 +97,17 @@ namespace BamlLocalization
         /// <summary>
         /// Parse the baml resources given in the command line
         /// </summary>        
-        private static void ParseBamlResources(LocBamlOptions options)
-        {            
-            TranslationDictionariesWriter.Write(options);         
+        private static bool ParseBamlResources(LocBamlOptions options)
+        {
+            if (options.Check)
+            {
+                return TranslationDictionariesWriter.Check(options);
+            }
+            else
+            {
+                TranslationDictionariesWriter.Write(options);
+                return true;
+            }
         }
 
         /// <summary>
@@ -125,6 +136,7 @@ namespace BamlLocalization
                                             "parse",        // /parse for update
                                             "generate",     // /generate     for generate
                                             "update",       // /update       for update
+                                            "check",        // /check        for check
                                             "*out",         // /out          for output .csv|.txt when parsing, for output directory when generating
                                             "*culture",     // /culture      for culture name
                                             "*translation", // /translation  for translation file, .csv|.txt
@@ -170,6 +182,10 @@ namespace BamlLocalization
                 else if (commandLineOption.Name == "update")
                 {
                     options.Update = true;
+                }
+                else if (commandLineOption.Name == "check")
+                {
+                    options.Check = true;
                 }
                 else if (commandLineOption.Name == "nologo")
                 {
@@ -267,6 +283,7 @@ namespace BamlLocalization
         internal bool           ToParse;
         internal bool           ToGenerate;
         internal bool           Update;
+        internal bool           Check;
         internal bool           HasNoLogo;
         internal bool           IsVerbose;
         internal FileType       TranslationFileType;

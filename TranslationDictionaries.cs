@@ -147,6 +147,81 @@ namespace BamlLocalization
             }   
         }
 
+        /// <summary>
+        /// Check if all localizable resources are translated
+        /// </summary>
+        /// <param name="options"></param>
+        internal static bool Check(LocBamlOptions options)
+        {
+            int failCount = 0;
+
+            if (!File.Exists(options.Output)) return false;
+
+            List<Resource> translatedResources = new List<Resource>();
+            using (Stream input = File.OpenRead(options.Output))
+            {
+                using (ResourceTextReader reader = new ResourceTextReader(options.TranslationFileType, input))
+                {
+                    translatedResources.AddRange(GetResources(reader));
+                }
+            }
+
+            InputBamlStreamList bamlStreamList = new InputBamlStreamList(options);
+
+            for (int i = 0; i < bamlStreamList.Count; i++)
+            {
+                options.Write("    ");
+                options.WriteLine(StringLoader.Get("ProcessingBaml", bamlStreamList[i].Name));
+
+                // create the baml localizer
+                BamlLocalizer mgr = new BamlLocalizer(
+                    bamlStreamList[i].Stream,
+                    new BamlLocalizabilityByReflection(options.Assemblies),
+                    null
+                    );
+
+                // extract localizable resource from the baml stream
+                BamlLocalizationDictionary dict = mgr.ExtractResources();
+
+                // check each resource
+                foreach (DictionaryEntry entry in dict)
+                {
+                    BamlLocalizableResourceKey key = (BamlLocalizableResourceKey)entry.Key;
+                    BamlLocalizableResource resource = (BamlLocalizableResource)entry.Value;
+
+                    Resource translatedResource = translatedResources.FirstOrDefault(r => r.Baml == bamlStreamList[i].Name && r.Key == LocBamlConst.ResourceKeyToString(key));
+
+                    if ((translatedResource == null) || (resource.Content != translatedResource.OriginalContent))
+                    {
+                        Console.WriteLine(StringLoader.Get("OutOfSync"));
+                        failCount++;
+                        break;
+                    }
+                    else if (translatedResource.UpdateTag.HasValue)
+                    {
+                        Console.WriteLine(StringLoader.Get("ResourceTagged", translatedResource.UpdateTag, bamlStreamList[i].Name, LocBamlConst.ResourceKeyToString(key)));
+                        failCount++;
+                    }
+                }
+
+                options.WriteLine(StringLoader.Get("Done"));
+            }
+
+            // close all the baml input streams, output stream is closed by writer.
+            bamlStreamList.Close();
+
+            if (failCount > 0)
+            {
+                Console.WriteLine(StringLoader.Get("CheckFailed", failCount));
+            }
+            else
+            {
+                Console.WriteLine(StringLoader.Get("CheckSuccess", failCount));
+            }
+
+            return failCount == 0;
+        }
+
         private static IList<Resource> GetResources(ResourceTextReader reader)
         {
             List<Resource> list = new List<Resource>();
