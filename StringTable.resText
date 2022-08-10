@@ -38,7 +38,8 @@ DoneGeneratingResource=Done generating resource stream '{0}'
 DoneGeneratingAssembly=Done generating Assembly
 
 ; Check mode output
-OutOfSync=Translated file is outdated. Run 'locbaml /parse /update Abc.baml /out:Abc.csv' to update it.
+OutOfSyncResourceAbsent=Translated file is out of sync. Resource {0}:{1} is absent in translation file.
+OutOfSyncDiffContent=Translated file is out of sync. Resource {0}:{1} has different neutral content. In DLL: '{2}'. In translaion file: '{3}'
 ResourceTagged=Resource {1}:{2} is tagged as '{0}'. Translate the resource and clear the tag.
 CheckFailed="Checking of translated file failed. {0} error(s) encountered."
 CheckSuccess="Checking completed. Translated file is OK."

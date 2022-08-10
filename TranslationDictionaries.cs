@@ -191,9 +191,15 @@ namespace BamlLocalization
 
                     Resource translatedResource = translatedResources.FirstOrDefault(r => r.Baml == bamlStreamList[i].Name && r.Key == LocBamlConst.ResourceKeyToString(key));
 
-                    if ((translatedResource == null) || (resource.Content != translatedResource.OriginalContent))
+                    if (translatedResource == null)
                     {
-                        Console.WriteLine(StringLoader.Get("OutOfSync"));
+                        Console.WriteLine(StringLoader.Get("OutOfSyncResourceAbsent", bamlStreamList[i].Name, LocBamlConst.ResourceKeyToString(key)));
+                        failCount++;
+                        break;
+                    }
+                    else if (resource.Content != translatedResource.OriginalContent)
+                    {
+                        Console.WriteLine(StringLoader.Get("OutOfSyncDiffContent", bamlStreamList[i].Name, LocBamlConst.ResourceKeyToString(key), resource.Content, translatedResource.OriginalContent));
                         failCount++;
                         break;
                     }

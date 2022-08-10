@@ -77,12 +77,8 @@ namespace BamlLocalization
             }
             catch(Exception e)                
             {
-#if DEBUG
-                throw e;
-#else
                 Console.WriteLine(e.Message);
                 return ErrorCode;            
-#endif
             }
 
             return SuccessCode;
