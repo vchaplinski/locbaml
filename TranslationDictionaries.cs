@@ -195,13 +195,11 @@ namespace BamlLocalization
                     {
                         Console.WriteLine(StringLoader.Get("OutOfSyncResourceAbsent", bamlStreamList[i].Name, LocBamlConst.ResourceKeyToString(key)));
                         failCount++;
-                        break;
                     }
                     else if (resource.Content != translatedResource.OriginalContent)
                     {
                         Console.WriteLine(StringLoader.Get("OutOfSyncDiffContent", bamlStreamList[i].Name, LocBamlConst.ResourceKeyToString(key), resource.Content, translatedResource.OriginalContent));
                         failCount++;
-                        break;
                     }
                     else if (translatedResource.UpdateTag.HasValue)
                     {
